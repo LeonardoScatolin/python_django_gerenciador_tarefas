@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+
+{% block title %} Tarefas Adiadas {% endblock  %}
+
+{% block content %}
+
+<div class="h-100 p-5 border rounded-3 text-white" style="background-color: #252525;">
+    <h1>Tarefas Adiadas</h1>
+    <div class="list-group">
+        {% for tarefa in tarefas_adiadas %}
+        <button type="button" class="list-group-item list-group-item-action list-group-item-secondary" data-bs-toggle="modal"
+            data-bs-target="#modal{{ tarefa.id }}">
+            <h5>{{tarefa.descricao}}</h5>
+            <small>Criado em: {{tarefa.criacao.day}}/{{tarefa.criacao.month}}/{{tarefa.criacao.year}}</small>
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal{{tarefa.id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 style="color: black;" class="modal-title fs-5" id="exampleModalLabel">{{tarefa.descricao}} | {{tarefa.categoria|capfirst}}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="color: black;">
+                        <p>Selecione uma ação para a tarefa {{tarefa.descricao}}</p>
+                        <a class="btn btn-success" href="{% url 'mover_para_tarefas' tarefa.id %}">Mover para tarefas</a>
+                        <a class="btn btn-primary" href="{% url 'editar_tarefa' tarefa.id %}">Editar</a>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{% url 'excluir_tarefa' tarefa.id %}" class="btn btn-danger">Excluir Tarefa</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <h2>Nenhuma tarefa foi adiada</h2>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
